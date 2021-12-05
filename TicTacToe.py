@@ -1,4 +1,4 @@
-from classes.gui import gui
+from classes.Gui import gui
 
 Interface = gui()
-Interface.menu_window()
+Interface.mainloop()
