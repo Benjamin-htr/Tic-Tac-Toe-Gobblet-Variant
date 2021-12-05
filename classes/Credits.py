@@ -1,6 +1,6 @@
 from tkinter import Button, Frame, PhotoImage, Label
 
-class Options (Frame):
+class Credits (Frame):
     def __init__(self, parent, controller, bg) -> None :
         Frame.__init__(self, parent, bg=bg)
         
@@ -13,6 +13,6 @@ class Options (Frame):
 
 
     def draw(self) -> None :
-        label = Label(self, text="This is the option page")
+        label = Label(self, text="This is the credits page")
         label.pack(side="top", fill="x", pady=50)
         

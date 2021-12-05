@@ -1,8 +1,9 @@
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Frame, Button, PhotoImage
-from classes.Menu import Menu
 from classes.Options import Options
+from classes.Menu import Menu
+from classes.Credits import Credits
 
 class gui(Tk) :
     def __init__(self, *args, **kwargs) -> None:
@@ -13,7 +14,7 @@ class gui(Tk) :
         self.title('Tic tac toe')
         self.geometry('1200x700')
         self.bg = "#6992FC"
-        self.pages=[Menu, Options]
+        self.pages=[Menu, Options, Credits]
         self.resizable(False, False)
 
         # creating a container
@@ -42,8 +43,13 @@ class gui(Tk) :
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
+
+    def closeApp(self) -> None :
+        self.destroy()
         
     def relative_to_assets(self, path: str) -> str:
             return self.assets_path+"/"+path
+
+
         
         
