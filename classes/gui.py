@@ -41,6 +41,7 @@ class gui(Tk) :
     # to display the current frame passed as
     # parameter
     def show_frame(self, page_name):
+        print("Go to : "+page_name)
         frame = self.frames[page_name]
         frame.tkraise()
 
