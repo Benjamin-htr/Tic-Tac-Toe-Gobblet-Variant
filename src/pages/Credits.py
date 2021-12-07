@@ -17,7 +17,7 @@ class Credits (Frame):
         title = Label(self, anchor="nw", justify="center",text="Crédits",bg=self.bg, fg="white", font=("Roboto Bold", 50 * -1))
         title.place(x=519, y=48)
 
-        name = Label(self, anchor="nw",text="Developper : Hautier Benjamin", bg=self.bg, fg="#F2FADB",font=("Roboto Medium", 30 * -1))
+        name = Label(self, anchor="nw",text="Developpeur : Hautier Benjamin", bg=self.bg, fg="#F2FADB",font=("Roboto Medium", 30 * -1))
         name.place(x=382.0, y=144.0)
 
         versions = Label(self,anchor="nw", text="Python Version : 3.9.1\nExtern Libs : Tkinter (v8.6)",bg=self.bg, fg="#F2FADB",font=("Roboto Medium", 30 * -1))

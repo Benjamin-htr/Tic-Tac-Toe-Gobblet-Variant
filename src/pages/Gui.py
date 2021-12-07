@@ -1,9 +1,9 @@
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Frame, Button, PhotoImage
-from classes.Options import Options
-from classes.Menu import Menu
-from classes.Credits import Credits
+from src.pages.Options import Options
+from src.pages.Menu import Menu
+from src.pages.Credits import Credits
 
 class gui(Tk) :
     def __init__(self, *args, **kwargs) -> None:
