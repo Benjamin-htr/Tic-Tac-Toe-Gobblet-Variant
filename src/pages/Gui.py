@@ -4,6 +4,7 @@ from tkinter import Tk, Frame, Button, PhotoImage
 from src.pages.Options import Options
 from src.pages.Menu import Menu
 from src.pages.Credits import Credits
+from src.pages.Game import Game
 
 class gui(Tk) :
     def __init__(self, *args, **kwargs) -> None:
@@ -14,7 +15,7 @@ class gui(Tk) :
         self.title('Tic tac toe')
         self.geometry('1200x700')
         self.bg = "#6992FC"
-        self.pages=[Menu, Options, Credits]
+        self.pages=[Menu, Options, Credits, Game]
         self.resizable(False, False)
 
         # creating a container

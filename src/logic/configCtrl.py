@@ -12,7 +12,6 @@ class configCtrl() :
         #create config file if not exist :
         if not os.path.exists('config.ini') :
             self.updateConfig()
-
    
     def write_file(self):
         self.config.write(open('config.ini', 'w'))
@@ -29,6 +28,7 @@ class configCtrl() :
     def getGame_type(self) -> str :
         self.config.read('config.ini')
         result = self.config.get('USER', 'game_type')
+        
         return result
 
     def getIa_level(self) -> str :

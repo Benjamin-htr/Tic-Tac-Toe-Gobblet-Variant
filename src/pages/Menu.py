@@ -15,7 +15,7 @@ class Menu (Frame):
 
     def draw(self) -> None :
         NewGameButton_image = PhotoImage(file=self.controller.relative_to_assets("NewGame.png"))
-        NewGameButton = Button(self,cursor="hand2", image=NewGameButton_image,borderwidth=0,highlightthickness=0,command=lambda: print("button_1 clicked"),relief="flat")
+        NewGameButton = Button(self,cursor="hand2", image=NewGameButton_image,borderwidth=0,highlightthickness=0,command=lambda: self.controller.show_frame("Game"),relief="flat")
         NewGameButton.image=NewGameButton_image
         NewGameButton.place( x=389.0, y=96.0, width=423.0, height=92.0)
 
