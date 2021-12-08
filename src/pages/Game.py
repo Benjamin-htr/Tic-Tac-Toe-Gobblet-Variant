@@ -1,4 +1,4 @@
-from tkinter import Button, Frame, PhotoImage, Label
+from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, StringVar
 from tkinter.messagebox import askyesno
 
 
@@ -10,6 +10,9 @@ class Game (Frame):
         #attributes :
         self.bg = bg
         self.controller = controller
+
+        self.goblet_type = StringVar()
+        self.goblet_type.set("medium")
         
         #init :
         self.drawPage()
@@ -30,6 +33,24 @@ class Game (Frame):
         #Gobelets title
         title = Label(self, anchor="nw", text="Gobelets :",bg=self.bg, fg="#F4F6D9", font=("Roboto Bold", 32 * -1))
         title.place(x=875.0, y=134.0)
+
+        #Choix de la taille du gobelet :
+        little_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Petit :", variable=self.goblet_type, value="little", command=lambda:print("little !"), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9", selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        little_RadioButton.place(x=757, y=234)
+        medium_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Moyen :", variable=self.goblet_type, value="medium", command=lambda:print("medium !"), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9",  selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        medium_RadioButton.place(x=727, y=349)
+        big_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Grand :", variable=self.goblet_type, value="big", command=lambda:print("big !"), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9",  selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        big_RadioButton.place(x=737, y=464)
+
+        #NbRestants de gobelets :
+        little_restants = Label(self, anchor="nw", text="2 restants",bg=self.bg, fg="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        little_restants.place(x=870, y=236)
+        medium_restants = Label(self, anchor="nw",text="3 restants",bg=self.bg, fg="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        medium_restants.place(x=870, y=351)
+        big_restants = Label(self, anchor="nw",text="2 restants",bg=self.bg, fg="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        big_restants.place(x=870, y=466)
+
+
 
         #On dessine la grille :
         self.drawGrid()
