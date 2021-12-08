@@ -16,10 +16,24 @@ class Game (Frame):
 
     def drawPage(self) -> None :
         #Titre de la page :
-        title = Label(self, anchor="nw", justify="center",text="Partie en cours",bg=self.bg, fg="white", font=("Roboto Bold", 40 * -1))
+        title = Label(self, anchor="nw",text="Partie en cours",bg=self.bg, fg="white", font=("Roboto Bold", 40 * -1))
         title.place(x=437.0, y=16.0)
 
+        #GameSettingView :
+        title = Label(self, anchor="nw", justify="left",text="Mode : 1 joueur\nIA : simple\n",bg=self.bg, fg="#FFFFFF", font=("Roboto Bold", 14 * -1))
+        title.place(x=13.0, y=14.0)
+
+        #Tour :
+        title = Label(self, anchor="nw",text="C'est au tour du joueur 1 !",bg=self.bg, fg="#F4F6D9", font=("Roboto Bold", 32 * -1))
+        title.place(x=400.0, y=90.0)
+
+        #Gobelets title
+        title = Label(self, anchor="nw", text="Gobelets :",bg=self.bg, fg="#F4F6D9", font=("Roboto Bold", 32 * -1))
+        title.place(x=875.0, y=134.0)
+
+        #On dessine la grille :
         self.drawGrid()
+
 
         QuitButton_image = PhotoImage(file=self.controller.relative_to_assets("QuitGame.png"))
         QuitButton = Button(self, cursor="hand2", image=QuitButton_image,borderwidth=0,highlightthickness=0,command=lambda: self.quitGame(),relief="flat")
@@ -29,44 +43,52 @@ class Game (Frame):
     def drawGrid(self) -> None :
         EmptyCase_image = PhotoImage(file=self.controller.relative_to_assets("EmptyCase.png"))
 
+        col1Pos = 140.0
+        col2Pos = 262.0
+        col3Pos = 384.0
+
+        line1Pos = 195.0
+        line2Pos = 317.0
+        line3Pos = 439.0
+
         #Colonne 1 :
         L1C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L1C1 clicked"),relief="flat")
         L1C1.image=EmptyCase_image
-        L1C1.place(x=140.0,y=195.0,width=105.0,height=105.0)
+        L1C1.place(x=col1Pos,y=line1Pos,width=105.0,height=105.0)
 
         L2C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L2C1 clicked"),relief="flat")
         L2C1.image=EmptyCase_image
-        L2C1.place(x=140.0,y=317.0,width=105.0,height=105.0)
+        L2C1.place(x=col1Pos,y=line2Pos,width=105.0,height=105.0)
 
         L3C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L3C1 clicked"),relief="flat")
         L3C1.image=EmptyCase_image
-        L3C1.place(x=140.0,y=439.0,width=105.0,height=105.0)
+        L3C1.place(x=col1Pos,y=line3Pos,width=105.0,height=105.0)
 
         #Colonne 2 :
         L1C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L1C2 clicked"),relief="flat")
         L1C2.image=EmptyCase_image
-        L1C2.place(x=262.0,y=195.0,width=105.0,height=105.0)
+        L1C2.place(x=col2Pos,y=line1Pos,width=105.0,height=105.0)
 
         L2C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L2C2 clicked"),relief="flat")
         L2C2.image=EmptyCase_image
-        L2C2.place(x=262.0,y=317.0,width=105.0,height=105.0)
+        L2C2.place(x=col2Pos,y=line2Pos,width=105.0,height=105.0)
 
         L3C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L3C2 clicked"),relief="flat")
         L3C2.image=EmptyCase_image
-        L3C2.place(x=262.0,y=439.0,width=105.0,height=105.0)
+        L3C2.place(x=col2Pos,y=line3Pos,width=105.0,height=105.0)
 
         #Colonne 3 :
         L1C3 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L1C3 clicked"),relief="flat")
         L1C3.image=EmptyCase_image
-        L1C3.place(x=384.0,y=195.0,width=105.0,height=105.0)
+        L1C3.place(x=col3Pos,y=line1Pos,width=105.0,height=105.0)
 
         L2C3 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L2C3 clicked"),relief="flat")
         L2C3.image=EmptyCase_image
-        L2C3.place(x=384.0,y=317.0,width=105.0,height=105.0)
+        L2C3.place(x=col3Pos,y=line2Pos,width=105.0,height=105.0)
 
         L3C3 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L3C3 clicked"),relief="flat")
         L3C3.image=EmptyCase_image
-        L3C3.place(x=384.0,y=439.0,width=105.0,height=105.0)
+        L3C3.place(x=col3Pos,y=line3Pos,width=105.0,height=105.0)
 
         return None
     
