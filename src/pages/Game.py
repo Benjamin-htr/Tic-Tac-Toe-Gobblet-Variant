@@ -1,6 +1,6 @@
 from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, StringVar
 from tkinter.messagebox import askyesno
-from src.logic.gameCtrl import gameCtrl
+from src.logic.GameCtrl import GameCtrl
 
 
 
@@ -22,7 +22,7 @@ class Game (Frame):
         
 
     def newGame (self) -> None :
-        self.gameCtrl = gameCtrl()
+        self.gameCtrl = GameCtrl()
         self.game_type = self.gameCtrl.game_type
         self.ia_level = self.gameCtrl.ia_level
 

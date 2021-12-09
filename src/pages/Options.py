@@ -1,5 +1,5 @@
 from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, StringVar
-from src.logic.configCtrl import configCtrl
+from src.logic.ConfigCtrl import ConfigCtrl
 
 class Options (Frame):
     def __init__(self, parent, controller, bg) -> None :
@@ -12,7 +12,7 @@ class Options (Frame):
         self.iaLevel = StringVar()
         
 
-        self.configCtrl = configCtrl()
+        self.configCtrl = ConfigCtrl()
         
         #init :
         self.draw()

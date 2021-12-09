@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 import os
 
-class configCtrl() :
+class ConfigCtrl() :
     def __init__(self) -> None :
 
         #attributes :
