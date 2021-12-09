@@ -1,7 +1,6 @@
 from tkinter import Button, Frame, PhotoImage
 from tkinter.messagebox import askyesno
 
-
 class Menu (Frame):
     def __init__(self, parent, controller, bg) -> None :
         Frame.__init__(self, parent, bg=bg)
@@ -9,6 +8,7 @@ class Menu (Frame):
 
         #attributes :
         self.controller = controller
+        
         
         #init :
         self.draw()
@@ -33,7 +33,9 @@ class Menu (Frame):
         QuitButton = Button(self, cursor="hand2", image=QuitButton_image,borderwidth=0,highlightthickness=0,command=lambda: self.quit(),relief="flat")
         QuitButton.image=QuitButton_image
         QuitButton.place(x=389.0,y=513.0,width=423.0,height=92.0)
+            
         
+
     def quit(self) -> None :
         answer = askyesno(title='Quitter', message='Etes vous sûr de vouloir quitter ?')
 

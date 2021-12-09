@@ -6,7 +6,7 @@ class configCtrl() :
 
         #attributes :
         self.config = ConfigParser()
-        self.game_type = "one_player"
+        self.game_type = "1 joueur"
         self.ia_level = "simple"
 
         #create config file if not exist :
@@ -17,7 +17,7 @@ class configCtrl() :
         self.config.write(open('config.ini', 'w'))
 
 
-    def updateConfig(self, game_type : str = "one_player", ia_level: str = "simple") :
+    def updateConfig(self, game_type : str = "1 joueur", ia_level: str = "simple") :
         self.game_type = game_type
         self.ia_level = ia_level
 

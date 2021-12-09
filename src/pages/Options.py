@@ -44,9 +44,9 @@ class Options (Frame):
         #Elements graphiques pour le choix du type de jeux :
         typeLabel = Label(self, anchor="nw", justify="center",text="Type de jeu :",bg=self.bg, fg="white", font=("Roboto Medium", 34 * -1))
         typeLabel.place(x=274, y=147)
-        oneP_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Un joueur", variable=self.gameType, value="one_player", command=lambda:self.updateConfig(), activebackground="#557CE0", bg=self.bg, fg="white", selectcolor="black", activeforeground="white", font=("Roboto Medium", 34 * -1))
+        oneP_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Un joueur", variable=self.gameType, value="1 joueur", command=lambda:self.updateConfig(), activebackground="#557CE0", bg=self.bg, fg="white", selectcolor="black", activeforeground="white", font=("Roboto Medium", 34 * -1))
         oneP_RadioButton.place(x=500, y=147)
-        twoP_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Deux joueurs", variable=self.gameType, value="two_player", command=lambda:self.updateConfig(), activebackground="#557CE0", bg=self.bg, fg="white",  selectcolor="black", activeforeground="white", font=("Roboto Medium", 34 * -1))
+        twoP_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Deux joueurs", variable=self.gameType, value="2 joueurs", command=lambda:self.updateConfig(), activebackground="#557CE0", bg=self.bg, fg="white",  selectcolor="black", activeforeground="white", font=("Roboto Medium", 34 * -1))
         twoP_RadioButton.place(x=850, y=147)
 
         #Elements graphiques pour le choix du niveau de l'IA :

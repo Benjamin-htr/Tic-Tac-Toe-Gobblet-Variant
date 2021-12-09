@@ -45,6 +45,9 @@ class gui(Tk) :
         print("Go to : "+page_name)
         frame = self.frames[page_name]
         frame.tkraise()
+        
+        if page_name == "Game" :
+            frame.newGame()
 
     def closeApp(self) -> None :
         self.destroy()
