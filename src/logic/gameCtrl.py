@@ -13,7 +13,8 @@ class GameCtrl :
         self.ia_level = self.configCtrl.getIa_level()
         #Représente le joueur qui doit jouer ce tour :
         self.actual_player = None
-        #Représente la grille de jeu :
+
+        #Représente la grille générale du jeu (les gobelets des deux joueurs):
         self.grid = [[0,0,0],
                     [0,0,0],
                     [0,0,0]]
@@ -23,16 +24,36 @@ class GameCtrl :
 
 
     def newGame(self) :
-        print(self.game_type)
         if self.game_type == "1 joueur" :
-            self.player_1 = Player()
-            self.player_2 = Ia()
+            self.player_1 = Player(self)
+            self.player_2 = Ia(self)
 
         elif self.game_type == "2 joueur" :
-            self.player_1 = Player()
-            self.player_2 = Player()
+            self.player_1 = Player(self)
+            self.player_2 = Player(self)
 
         self.actual_player = self.player_1
-
             
         return None
+
+    def setGobletGrid(self, line, column, goblet) -> None:
+        isValid = self.isValid(line, column, goblet)
+        if isValid :
+            self.grid[line][column] = goblet
+            print(self.grid)
+        else :
+            result="test"
+            print("Non valide !")
+
+
+    def isValid(self, line, column, goblet) -> bool :
+        result = goblet > self.grid[line][column]
+        return result
+
+
+    
+    
+
+    
+
+    

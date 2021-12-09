@@ -31,7 +31,7 @@ class gui(Tk) :
         for F in (self.pages):
             page_name = F.__name__
             frame = F(parent=container, controller=self, bg=self.bg)
-  
+            print(frame)
             self.frames[page_name] = frame
   
             frame.grid(row = 0, column = 0, sticky ="nsew")

@@ -1,4 +1,4 @@
-from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, StringVar
+from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, IntVar
 from tkinter.constants import N
 from tkinter.messagebox import NO, askyesno
 from src.logic.GameCtrl import GameCtrl
@@ -15,8 +15,9 @@ class Game (Frame):
         self.gameCtrl = None
         self.game_type = None
         self.ia_level = None
+        self.gridCase=[]
 
-        self.goblet_type = StringVar()
+        self.goblet_type = IntVar()
         self.goblet_type.set(2)
         
 
@@ -83,50 +84,52 @@ class Game (Frame):
         line2Pos = 317.0
         line3Pos = 439.0
 
-        #Colonne 1 :
+        #Colonne 0 :
+        L0C0 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(0,0),relief="flat")
+        L0C0.image=EmptyCase_image
+        L0C0.place(x=col1Pos,y=line1Pos,width=105.0,height=105.0)
+
+        L1C0 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(1,0),relief="flat")
+        L1C0.image=EmptyCase_image
+        L1C0.place(x=col1Pos,y=line2Pos,width=105.0,height=105.0)
+
+        L2C0 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(2,0),relief="flat")
+        L2C0.image=EmptyCase_image
+        L2C0.place(x=col1Pos,y=line3Pos,width=105.0,height=105.0)
+
+        #Colonne 2 :
+        L0C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(0,1),relief="flat")
+        L0C1.image=EmptyCase_image
+        L0C1.place(x=col2Pos,y=line1Pos,width=105.0,height=105.0)
+
         L1C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(1,1),relief="flat")
         L1C1.image=EmptyCase_image
-        L1C1.place(x=col1Pos,y=line1Pos,width=105.0,height=105.0)
+        L1C1.place(x=col2Pos,y=line2Pos,width=105.0,height=105.0)
 
         L2C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(2,1),relief="flat")
         L2C1.image=EmptyCase_image
-        L2C1.place(x=col1Pos,y=line2Pos,width=105.0,height=105.0)
-
-        L3C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(3,1),relief="flat")
-        L3C1.image=EmptyCase_image
-        L3C1.place(x=col1Pos,y=line3Pos,width=105.0,height=105.0)
-
-        #Colonne 2 :
-        L1C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(1,2),relief="flat")
-        L1C2.image=EmptyCase_image
-        
-        L1C2.place(x=col2Pos,y=line1Pos,width=105.0,height=105.0)
-
-        L2C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(2,2),relief="flat")
-        L2C2.image=EmptyCase_image
-        L2C2.place(x=col2Pos,y=line2Pos,width=105.0,height=105.0)
-
-        L3C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(3,2),relief="flat")
-        L3C2.image=EmptyCase_image
-        L3C2.place(x=col2Pos,y=line3Pos,width=105.0,height=105.0)
+        L2C1.place(x=col2Pos,y=line3Pos,width=105.0,height=105.0)
 
         #Colonne 3 :
-        L1C3 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(1,3),relief="flat")
-        L1C3.image=EmptyCase_image
-        L1C3.place(x=col3Pos,y=line1Pos,width=105.0,height=105.0)
+        L0C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(0,2),relief="flat")
+        L0C2.image=EmptyCase_image
+        L0C2.place(x=col3Pos,y=line1Pos,width=105.0,height=105.0)
 
-        L2C3 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(2,3),relief="flat")
-        L2C3.image=EmptyCase_image
-        L2C3.place(x=col3Pos,y=line2Pos,width=105.0,height=105.0)
+        L1C2 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(1,2),relief="flat")
+        L1C2.image=EmptyCase_image
+        L1C2.place(x=col3Pos,y=line2Pos,width=105.0,height=105.0)
 
-        L3C3 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(3,3),relief="flat")
-        L3C3.image=EmptyCase_image
-        L3C3.place(x=col3Pos,y=line3Pos,width=105.0,height=105.0)
+        L2C2 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(2,2),relief="flat")
+        L2C2.image=EmptyCase_image
+        L2C2.place(x=col3Pos,y=line3Pos,width=105.0,height=105.0)
+
+
 
         return None
 
     def pressCase(self, line : int, column : int) -> None :
         self.gameCtrl.actual_player.play(line, column)
+
         return None
 
     def updatePlayer(self) -> None :
