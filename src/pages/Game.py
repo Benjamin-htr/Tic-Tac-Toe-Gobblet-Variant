@@ -1,5 +1,6 @@
 from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, StringVar
-from tkinter.messagebox import askyesno
+from tkinter.constants import N
+from tkinter.messagebox import NO, askyesno
 from src.logic.GameCtrl import GameCtrl
 
 
@@ -7,8 +8,6 @@ from src.logic.GameCtrl import GameCtrl
 class Game (Frame):
     def __init__(self, parent, controller, bg) -> None :
         Frame.__init__(self, parent, bg=bg)
-
-        
 
         #attributes :
         self.bg = bg
@@ -18,7 +17,7 @@ class Game (Frame):
         self.ia_level = None
 
         self.goblet_type = StringVar()
-        self.goblet_type.set("medium")
+        self.goblet_type.set(2)
         
 
     def newGame (self) -> None :
@@ -27,6 +26,7 @@ class Game (Frame):
         self.ia_level = self.gameCtrl.ia_level
 
         self.drawPage()
+        self.gameCtrl.newGame()
 
     def drawPage(self) -> None :
         #Titre de la page :
@@ -46,11 +46,11 @@ class Game (Frame):
         GobeletTitle.place(x=875.0, y=134.0)
 
         #Choix de la taille du gobelet :
-        little_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Petit :", variable=self.goblet_type, value="little", command=lambda:print("little !"), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9", selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        little_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Petit :", variable=self.goblet_type, value=1, command=lambda:self.updatePlayer(), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9", selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
         little_RadioButton.place(x=757, y=234)
-        medium_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Moyen :", variable=self.goblet_type, value="medium", command=lambda:print("medium !"), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9",  selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        medium_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Moyen :", variable=self.goblet_type, value=2, command=lambda:self.updatePlayer(), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9",  selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
         medium_RadioButton.place(x=727, y=349)
-        big_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Grand :", variable=self.goblet_type, value="big", command=lambda:print("big !"), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9",  selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        big_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Grand :", variable=self.goblet_type, value=3, command=lambda:self.updatePlayer(), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9",  selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
         big_RadioButton.place(x=737, y=464)
 
         #NbRestants de gobelets :
@@ -84,45 +84,53 @@ class Game (Frame):
         line3Pos = 439.0
 
         #Colonne 1 :
-        L1C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L1C1 clicked"),relief="flat")
+        L1C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(1,1),relief="flat")
         L1C1.image=EmptyCase_image
         L1C1.place(x=col1Pos,y=line1Pos,width=105.0,height=105.0)
 
-        L2C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L2C1 clicked"),relief="flat")
+        L2C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(2,1),relief="flat")
         L2C1.image=EmptyCase_image
         L2C1.place(x=col1Pos,y=line2Pos,width=105.0,height=105.0)
 
-        L3C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L3C1 clicked"),relief="flat")
+        L3C1 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(3,1),relief="flat")
         L3C1.image=EmptyCase_image
         L3C1.place(x=col1Pos,y=line3Pos,width=105.0,height=105.0)
 
         #Colonne 2 :
-        L1C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L1C2 clicked"),relief="flat")
+        L1C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(1,2),relief="flat")
         L1C2.image=EmptyCase_image
         
         L1C2.place(x=col2Pos,y=line1Pos,width=105.0,height=105.0)
 
-        L2C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L2C2 clicked"),relief="flat")
+        L2C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(2,2),relief="flat")
         L2C2.image=EmptyCase_image
         L2C2.place(x=col2Pos,y=line2Pos,width=105.0,height=105.0)
 
-        L3C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L3C2 clicked"),relief="flat")
+        L3C2 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(3,2),relief="flat")
         L3C2.image=EmptyCase_image
         L3C2.place(x=col2Pos,y=line3Pos,width=105.0,height=105.0)
 
         #Colonne 3 :
-        L1C3 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L1C3 clicked"),relief="flat")
+        L1C3 = Button(self, image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(1,3),relief="flat")
         L1C3.image=EmptyCase_image
         L1C3.place(x=col3Pos,y=line1Pos,width=105.0,height=105.0)
 
-        L2C3 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L2C3 clicked"),relief="flat")
+        L2C3 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(2,3),relief="flat")
         L2C3.image=EmptyCase_image
         L2C3.place(x=col3Pos,y=line2Pos,width=105.0,height=105.0)
 
-        L3C3 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: print("L3C3 clicked"),relief="flat")
+        L3C3 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(3,3),relief="flat")
         L3C3.image=EmptyCase_image
         L3C3.place(x=col3Pos,y=line3Pos,width=105.0,height=105.0)
 
+        return None
+
+    def pressCase(self, line : int, column : int) -> None :
+        self.gameCtrl.actual_player.play(line, column)
+        return None
+
+    def updatePlayer(self) -> None :
+        self.gameCtrl.actual_player.selectGoblet(self.goblet_type.get())
         return None
 
     def quitGame(self) -> None :
@@ -132,9 +140,11 @@ class Game (Frame):
         if answer :
             self.controller.show_frame("Menu")
             self.deleteContent()
+
+        return None
     
     def deleteContent(self) -> None :
-        for child in self.winfo_children():
+        for child in self.winfo_children() :
             child.destroy()
 
         return None

@@ -23,6 +23,7 @@ class GameCtrl :
 
 
     def newGame(self) :
+        print(self.game_type)
         if self.game_type == "1 joueur" :
             self.player_1 = Player()
             self.player_2 = Ia()
@@ -30,6 +31,8 @@ class GameCtrl :
         elif self.game_type == "2 joueur" :
             self.player_1 = Player()
             self.player_2 = Player()
+
+        self.actual_player = self.player_1
 
             
         return None

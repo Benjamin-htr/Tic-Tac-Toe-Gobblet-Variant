@@ -34,7 +34,7 @@ class Menu (Frame):
         QuitButton.image=QuitButton_image
         QuitButton.place(x=389.0,y=513.0,width=423.0,height=92.0)
             
-        
+    
 
     def quit(self) -> None :
         answer = askyesno(title='Quitter', message='Etes vous sûr de vouloir quitter ?')

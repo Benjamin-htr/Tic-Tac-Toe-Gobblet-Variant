@@ -13,7 +13,7 @@ class ConfigCtrl() :
         if not os.path.exists('config.ini') :
             self.updateConfig()
    
-    def write_file(self):
+    def write_file(self) :
         self.config.write(open('config.ini', 'w'))
 
 
