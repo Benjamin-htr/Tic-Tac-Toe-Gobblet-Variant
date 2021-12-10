@@ -26,15 +26,15 @@ class GameCtrl :
     def newGame(self) :
         print("New Game !")
         if self.game_type == "1 joueur" :
-            self.player_1 = Player(self, "Player1")
-            self.player_2 = Ia(self, "Player2")
+            self.player_1 = Player(self, 1)
+            self.player_2 = Ia(self, 2)
 
         elif self.game_type == "2 joueurs" :
-            self.player_1 = Player(self, "Player1")
-            self.player_2 = Player(self, "Player2")
+            self.player_1 = Player(self, 1)
+            self.player_2 = Player(self, 2)
 
         print(self.player_1)
-        self.actual_player = self.player_1
+        self.actual_player = self.player_2
         print(self.actual_player)
             
         return None

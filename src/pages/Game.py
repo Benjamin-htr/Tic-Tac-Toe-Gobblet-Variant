@@ -1,4 +1,4 @@
-from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, IntVar
+from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, IntVar, StringVar
 from tkinter.constants import N
 from tkinter.messagebox import NO, askyesno
 from src.logic.GameCtrl import GameCtrl
@@ -18,16 +18,26 @@ class Game (Frame):
         self.gridCase=[]
 
         self.goblet_type = IntVar()
-        self.goblet_type.set(2)
+
+        self.nbLittleGobletRestant = StringVar()
+        self.nbMediumGobletRestant = StringVar()
+        self.nbBigGobletRestant = StringVar()
+        self.tourLabel = StringVar()
         
 
     def newGame (self) -> None :
         self.gameCtrl = GameCtrl()
+        self.gameCtrl.newGame()
+
         self.game_type = self.gameCtrl.game_type
         self.ia_level = self.gameCtrl.ia_level
-
+        
         self.drawPage()
-        self.gameCtrl.newGame()
+
+        self.goblet_type.set(2)
+        self.updateNbGoblet()
+        self.updateTourLabel()
+        self.updatePreviewGoblet()
 
     def drawPage(self) -> None :
         #Titre de la page :
@@ -39,7 +49,7 @@ class Game (Frame):
         SettingsView.place(x=13.0, y=14.0)
 
         #Tour :
-        tour = Label(self, anchor="nw",text="C'est au tour du joueur 1 !",bg=self.bg, fg="#F4F6D9", font=("Roboto Bold", 32 * -1))
+        tour = Label(self, anchor="nw",textvariable=self.tourLabel,bg=self.bg, fg="#F4F6D9", font=("Roboto Bold", 32 * -1))
         tour.place(x=400.0, y=90.0)
 
         #Gobelets title
@@ -55,12 +65,22 @@ class Game (Frame):
         big_RadioButton.place(x=737, y=464)
 
         #NbRestants de gobelets :
-        little_restants = Label(self, anchor="nw", text="2 restants",bg=self.bg, fg="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        little_restants = Label(self, anchor="nw", textvariable=self.nbLittleGobletRestant,bg=self.bg, fg="#F4F6D9", font=("Roboto Medium", 27 * -1))
         little_restants.place(x=870, y=236)
-        medium_restants = Label(self, anchor="nw",text="3 restants",bg=self.bg, fg="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        medium_restants = Label(self, anchor="nw",textvariable=self.nbMediumGobletRestant,bg=self.bg, fg="#F4F6D9", font=("Roboto Medium", 27 * -1))
         medium_restants.place(x=870, y=351)
-        big_restants = Label(self, anchor="nw",text="2 restants",bg=self.bg, fg="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        big_restants = Label(self, anchor="nw",textvariable=self.nbBigGobletRestant,bg=self.bg, fg="#F4F6D9", font=("Roboto Medium", 27 * -1))
         big_restants.place(x=870, y=466)
+
+        #image Des Gobelets :
+        self.littleGobelet_preview = Label(self, bg=self.bg)
+        self.littleGobelet_preview.place(x=1058, y = 236)
+
+        self.mediumGobelet_preview = Label(self, bg=self.bg)
+        self.mediumGobelet_preview.place(x=1051, y = 347)
+
+        self.bigGobelet_preview = Label(self, bg=self.bg)
+        self.bigGobelet_preview.place(x=1050, y = 445)
 
 
 
@@ -75,8 +95,6 @@ class Game (Frame):
         
     def drawGrid(self, ) -> None :
         EmptyCase_image = PhotoImage(file=self.controller.relative_to_assets("EmptyCase.png"))
-        Test = PhotoImage(file=self.controller.relative_to_assets("Player1_BigGoblet.png"))
-
 
         col1Pos = 140.0
         col2Pos = 262.0
@@ -129,20 +147,50 @@ class Game (Frame):
 
     def pressCase(self, line : int, column : int, button : Button) -> None :
         if self.gameCtrl.actual_player.play(line, column) :
-            if self.gameCtrl.actual_player.selectedGoblet == 1 :
-                gobletName = "LittleGoblet"
-            elif self.gameCtrl.actual_player.selectedGoblet == 2 :
-                gobletName = "MediumGoblet"
-            elif self.gameCtrl.actual_player.selectedGoblet == 3 :
-                gobletName = "BigGoblet"
-
-            gobletImagePath = self.gameCtrl.actual_player.name+"_"+gobletName+".png"
-            ImageCase = PhotoImage(file=self.controller.relative_to_assets(gobletImagePath))
-            print("button : ", button)
-            button['image'] = ImageCase
-            button.image = ImageCase
+            self.updateImageCase(button)
+            self.updateNbGoblet()
+            self.updateTourLabel()
+            self.updatePreviewGoblet()
 
         return None
+
+    def updatePreviewGoblet(self) -> None :
+        idPlayer = self.gameCtrl.actual_player.id
+
+        littleGobeletImage= PhotoImage(file=self.controller.relative_to_assets(str(idPlayer)+"_LittleGoblet.png"))
+        self.littleGobelet_preview["image"] = littleGobeletImage
+        self.littleGobelet_preview.image = littleGobeletImage
+
+        mediumGobeletImage= PhotoImage(file=self.controller.relative_to_assets(str(idPlayer)+"_MediumGoblet.png"))
+        self.mediumGobelet_preview["image"] = mediumGobeletImage
+        self.mediumGobelet_preview.image = mediumGobeletImage
+
+        bigGobeletImage= PhotoImage(file=self.controller.relative_to_assets(str(idPlayer)+"_BigGoblet.png"))
+        self.bigGobelet_preview["image"] = mediumGobeletImage
+        self.bigGobelet_preview.image = bigGobeletImage
+
+
+    def updateTourLabel(self) -> None :
+        self.tourLabel.set("C'est au tour du joueur "+str(self.gameCtrl.actual_player.id)+" !")
+
+    def updateNbGoblet(self) -> None :
+        self.nbLittleGobletRestant.set(str(self.gameCtrl.actual_player.nbLittleGoblets)+" restants")
+        self.nbMediumGobletRestant.set(str(self.gameCtrl.actual_player.nbMediumGoblets)+" restants")
+        self.nbBigGobletRestant.set(str(self.gameCtrl.actual_player.nbBigGoblets)+" restants")
+
+
+    def updateImageCase(self, button : Button) -> None :
+        if self.gameCtrl.actual_player.selectedGoblet == 1 :
+            gobletName = "LittleGobletCase"
+        elif self.gameCtrl.actual_player.selectedGoblet == 2 :
+            gobletName = "MediumGobletCase"
+        elif self.gameCtrl.actual_player.selectedGoblet == 3 :
+            gobletName = "BigGobletCase"
+
+        gobletImagePath = str(self.gameCtrl.actual_player.id)+"_"+gobletName+".png"
+        ImageCase = PhotoImage(file=self.controller.relative_to_assets(gobletImagePath))
+        button['image'] = ImageCase
+        button.image = ImageCase
 
     def updatePlayer(self) -> None :
         self.gameCtrl.actual_player.selectGoblet(self.goblet_type.get())

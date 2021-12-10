@@ -4,12 +4,11 @@ if TYPE_CHECKING:
     from src.logic.GameCtrl import GameCtrl
 
 class Player() :
-    def __init__(self, gameCtrl : GameCtrl, name : str) -> None :
+    def __init__(self, gameCtrl : GameCtrl, id : int) -> None :
         #Nombre de gobelets restants :
-        print("ici")
-        self.name = name
+        self.id = id
         self.nbLittleGoblets = 2
-        self.nbMediumBoblets = 3
+        self.nbMediumGoblets = 3
         self.nbBigGoblets = 2
 
         #Représente la partie :
@@ -33,7 +32,7 @@ class Player() :
             if self.selectedGoblet == 1 :
                 self.nbLittleGoblets -= 1
             elif self.selectedGoblet == 2 :
-                self.nbMediumBoblets -= 1
+                self.nbMediumGoblets -= 1
             elif self.selectedGoblet == 3 :
                 self.nbBigGoblets -= 1
             return True
@@ -42,7 +41,7 @@ class Player() :
         if gobletSize == 1 :
             result = self.nbLittleGoblets
         elif gobletSize == 2 :
-            result = self.nbMediumBoblets
+            result = self.nbMediumGoblets
         elif gobletSize == 3 :
             result = self.nbBigGoblets
 
