@@ -13,11 +13,6 @@ class Player() :
         #Représente la partie :
         self.gameCtrl = gameCtrl
 
-        #Représente la grille spécifique du joueur (avec seulement ses gobelets) :
-        self.grid = [[0,0,0],
-                    [0,0,0],
-                    [0,0,0]]
-
         #Représente le gobelet sélectionné (1 : petit, 2 : moyen, 3 : grand) : 
         #vaut 2 par défaut 
         self.selectedGoblet = 2
@@ -29,11 +24,8 @@ class Player() :
 
     def play(self, line : int, column : int) -> None :
         print("case select : ", line, column)
-        isValid = self.gameCtrl.isValid(line, column, self.selectedGoblet)
-        if isValid :
-            self.gameCtrl.setGobletGrid(line, column, self.selectedGoblet)
+        self.gameCtrl.setGobletGrid(line, column, self.selectedGoblet)
 
-        return isValid
 
     
 

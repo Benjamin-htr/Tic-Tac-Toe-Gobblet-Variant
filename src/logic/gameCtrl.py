@@ -15,9 +15,9 @@ class GameCtrl :
         self.actual_player = None
 
         #Représente la grille générale du jeu (les gobelets des deux joueurs):
-        self.grid = [[0,0,0],
-                    [0,0,0],
-                    [0,0,0]]
+        self.grid = [[{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0}],
+                    [{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0}],
+                    [{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0}]]
 
         self.player_1 = None
         self.player_2 = None
@@ -36,20 +36,20 @@ class GameCtrl :
             
         return None
 
-    def setGobletGrid(self, line, column, goblet) -> None:
+    def setGobletGrid(self, line : int, column : int, goblet : int) -> None:
         isValid = self.isValid(line, column, goblet)
         if isValid :
-            self.grid[line][column] = goblet
-            print(self.grid)
+            self.grid[line][column] = {"player" : self.actual_player, "goblet" : goblet}
         else :
-            result="test"
             print("Non valide !")
 
 
-    def isValid(self, line, column, goblet) -> bool :
-        result = goblet > self.grid[line][column]
+    def isValid(self, line : int, column : int, goblet : int) -> bool :
+        result = (goblet > self.grid[line][column]["goblet"])
         return result
+        
 
+    
 
     
     
