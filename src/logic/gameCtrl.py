@@ -24,25 +24,29 @@ class GameCtrl :
 
 
     def newGame(self) :
+        print("New Game !")
         if self.game_type == "1 joueur" :
-            self.player_1 = Player(self)
-            self.player_2 = Ia(self)
+            self.player_1 = Player(self, "Player1")
+            self.player_2 = Ia(self, "Player2")
 
-        elif self.game_type == "2 joueur" :
-            self.player_1 = Player(self)
-            self.player_2 = Player(self)
+        elif self.game_type == "2 joueurs" :
+            self.player_1 = Player(self, "Player1")
+            self.player_2 = Player(self, "Player2")
 
+        print(self.player_1)
         self.actual_player = self.player_1
+        print(self.actual_player)
             
         return None
 
-    def setGobletGrid(self, line : int, column : int, goblet : int) -> None:
+    def setGobletGrid(self, line : int, column : int, goblet : int) -> bool :
         isValid = self.isValid(line, column, goblet)
         if isValid :
             self.grid[line][column] = {"player" : self.actual_player, "goblet" : goblet}
-        else :
-            print("Non valide !")
-
+            print(self.grid)
+        
+        return isValid
+        
 
     def isValid(self, line : int, column : int, goblet : int) -> bool :
         result = (goblet > self.grid[line][column]["goblet"])

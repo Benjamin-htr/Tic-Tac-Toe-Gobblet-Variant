@@ -4,8 +4,10 @@ if TYPE_CHECKING:
     from src.logic.GameCtrl import GameCtrl
 
 class Player() :
-    def __init__(self, gameCtrl : GameCtrl) -> None :
+    def __init__(self, gameCtrl : GameCtrl, name : str) -> None :
         #Nombre de gobelets restants :
+        print("ici")
+        self.name = name
         self.nbLittleGoblets = 2
         self.nbMediumBoblets = 3
         self.nbBigGoblets = 2
@@ -22,11 +24,29 @@ class Player() :
         self.selectedGoblet = goblet_type
         print(self.selectedGoblet)
 
-    def play(self, line : int, column : int) -> None :
-        print("case select : ", line, column)
-        self.gameCtrl.setGobletGrid(line, column, self.selectedGoblet)
+    def play(self, line : int, column : int) -> bool :
+        #Si l'utilisateur essaie de jouer un gobelet qu'il n'a plus, on stoppe la fonction
+        if self.getNbGoblets(self.selectedGoblet) <= 0 :
+            return False
 
+        if self.gameCtrl.setGobletGrid(line, column, self.selectedGoblet) :
+            if self.selectedGoblet == 1 :
+                self.nbLittleGoblets -= 1
+            elif self.selectedGoblet == 2 :
+                self.nbMediumBoblets -= 1
+            elif self.selectedGoblet == 3 :
+                self.nbBigGoblets -= 1
+            return True
 
+    def getNbGoblets(self, gobletSize : int) -> int :
+        if gobletSize == 1 :
+            result = self.nbLittleGoblets
+        elif gobletSize == 2 :
+            result = self.nbMediumBoblets
+        elif gobletSize == 3 :
+            result = self.nbBigGoblets
+
+        return result
     
 
     
