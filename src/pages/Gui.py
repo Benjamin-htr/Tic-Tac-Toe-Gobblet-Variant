@@ -14,6 +14,7 @@ class gui(Tk) :
         Tk.__init__(self, *args, **kwargs)
         self.title('Tic tac toe')
         self.geometry('1200x700')
+
         self.bg = "#6992FC"
         self.pages=[Menu, Options, Credits, Game]
         self.resizable(False, False)

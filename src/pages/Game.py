@@ -1,4 +1,4 @@
-from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, IntVar, StringVar
+from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, IntVar, StringVar, Toplevel
 from tkinter.constants import N
 from tkinter.messagebox import NO, askyesno
 from src.logic.GameCtrl import GameCtrl
@@ -57,11 +57,11 @@ class Game (Frame):
         GobeletTitle.place(x=875.0, y=134.0)
 
         #Choix de la taille du gobelet :
-        little_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Petit :", variable=self.goblet_type, value=1, command=lambda:self.updatePlayer(), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9", selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        little_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Petit :", variable=self.goblet_type, value=1, command=lambda:self.updateSelectGoblet(), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9", selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
         little_RadioButton.place(x=757, y=234)
-        medium_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Moyen :", variable=self.goblet_type, value=2, command=lambda:self.updatePlayer(), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9",  selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        medium_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Moyen :", variable=self.goblet_type, value=2, command=lambda:self.updateSelectGoblet(), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9",  selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
         medium_RadioButton.place(x=727, y=349)
-        big_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Grand :", variable=self.goblet_type, value=3, command=lambda:self.updatePlayer(), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9",  selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
+        big_RadioButton = Radiobutton(self, anchor="nw", cursor="hand2", text="Grand :", variable=self.goblet_type, value=3, command=lambda:self.updateSelectGoblet(), activebackground="#557CE0", bg=self.bg, fg="#F4F6D9",  selectcolor="black", activeforeground="#F4F6D9", font=("Roboto Medium", 27 * -1))
         big_RadioButton.place(x=737, y=464)
 
         #NbRestants de gobelets :
@@ -145,14 +145,58 @@ class Game (Frame):
 
         return None
 
+        
+
+
     def pressCase(self, line : int, column : int, button : Button) -> None :
         if self.gameCtrl.actual_player.play(line, column) :
             self.updateImageCase(button)
             self.updateNbGoblet()
-            self.updateTourLabel()
-            self.updatePreviewGoblet()
+
+            if self.gameCtrl.isWin(self.gameCtrl.actual_player) :
+                print("winner : ", self.gameCtrl.actual_player, "id : ", self.gameCtrl.actual_player.id)
+                self.winPopup()
+
+            else :
+                self.gameCtrl.nextTurn()
+                self.updateSelectGoblet()
+                self.updateNbGoblet()
+                self.updateTourLabel()
+                self.updatePreviewGoblet()
 
         return None
+
+    def winPopup(self) -> bool :
+        winPopup = Toplevel(self)
+        winPopup.title("Victoire !")
+        winPopupBgColor = "#4C5985"
+        winPopup.configure(background=winPopupBgColor)
+        #Taille de la fenêtre
+        winPopupWidth = 500
+        winPopupHeight = 192
+        winPopup.geometry(f"{winPopupWidth}x{winPopupHeight}")
+        #Positition de la fenêtre pour la centrer
+        x_Left = int(winPopup.winfo_screenwidth()/2 - winPopupWidth/2)
+        y_Top = int(winPopup.winfo_screenheight()/2 - winPopupHeight/2)
+        
+        #Centrage de la fenêtre
+        winPopup.geometry("+{}+{}".format(x_Left, y_Top))
+        #Empêche de fermer la fenêtre :
+        winPopup.protocol("WM_DELETE_WINDOW", lambda:None)
+        winPopup.overrideredirect(True)
+        winPopup.grab_set()
+        
+        labelExample = Label(winPopup, text = "Victoire du joueur "+str(self.gameCtrl.actual_player.id)+" !", bg=winPopupBgColor, fg="#FFFFFF", font=("Roboto Bold", 40 * -1))
+        labelExample.place(x= 58, y = 33)
+        ReturnMenu_image = PhotoImage(file=self.controller.relative_to_assets("ReturnMenuAfterWin.png"))
+        ReturnMenuButton = Button(winPopup, cursor="hand2", image=ReturnMenu_image,borderwidth=0,highlightthickness=0,command=lambda: self.afterWin(),relief="flat")
+        ReturnMenuButton.image=ReturnMenu_image
+        ReturnMenuButton.place(x=100.0,y=111.0,width=299.0,height=54.0)
+
+    def afterWin(self) -> None :
+        self.controller.show_frame("Menu")
+        self.deleteContent()
+
 
     def updatePreviewGoblet(self) -> None :
         idPlayer = self.gameCtrl.actual_player.id
@@ -192,7 +236,7 @@ class Game (Frame):
         button['image'] = ImageCase
         button.image = ImageCase
 
-    def updatePlayer(self) -> None :
+    def updateSelectGoblet(self) -> None :
         self.gameCtrl.actual_player.selectGoblet(self.goblet_type.get())
         return None
 
