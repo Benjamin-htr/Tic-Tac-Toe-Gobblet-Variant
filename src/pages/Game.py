@@ -1,7 +1,14 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from src.logic.Player import Player
+    
 from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, IntVar, StringVar, Toplevel
 from tkinter.constants import N
 from tkinter.messagebox import NO, askyesno
 from src.logic.GameCtrl import GameCtrl
+
+
 
 
 
@@ -143,6 +150,10 @@ class Game (Frame):
         L2C2.image=EmptyCase_image
         L2C2.place(x=col3Pos,y=line3Pos,width=105.0,height=105.0)
 
+        self.gridCase=[[L0C0, L0C1, L0C2],
+                       [L1C0, L1C1, L1C2],
+                       [L2C0, L2C1, L2C2]]
+
         return None
 
         
@@ -150,23 +161,30 @@ class Game (Frame):
 
     def pressCase(self, line : int, column : int, button : Button) -> None :
         if self.gameCtrl.actual_player.play(line, column) :
-            self.updateImageCase(button)
+            self.updateGrid()
             self.updateNbGoblet()
 
-            if self.gameCtrl.isWin(self.gameCtrl.actual_player) :
-                print("winner : ", self.gameCtrl.actual_player, "id : ", self.gameCtrl.actual_player.id)
-                self.winPopup()
-
-            else :
+            if not(self.checkWin()) :
                 self.gameCtrl.nextTurn()
+                self.updateGrid()
+                self.checkWin()
                 self.updateSelectGoblet()
                 self.updateNbGoblet()
                 self.updateTourLabel()
                 self.updatePreviewGoblet()
 
         return None
+    def checkWin(self) -> bool :
+        if self.gameCtrl.isWin(self.gameCtrl.player_1) :
+            self.winPopup(self.gameCtrl.player_1)
+            return True
+        elif self.gameCtrl.isWin(self.gameCtrl.player_2) :
+            self.winPopup(self.gameCtrl.player_2)
+            return True
+        else :
+            return False
 
-    def winPopup(self) -> bool :
+    def winPopup(self, player : Player) -> bool :
         winPopup = Toplevel(self)
         winPopup.title("Victoire !")
         winPopupBgColor = "#4C5985"
@@ -186,7 +204,7 @@ class Game (Frame):
         winPopup.overrideredirect(True)
         winPopup.grab_set()
         
-        labelExample = Label(winPopup, text = "Victoire du joueur "+str(self.gameCtrl.actual_player.id)+" !", bg=winPopupBgColor, fg="#FFFFFF", font=("Roboto Bold", 40 * -1))
+        labelExample = Label(winPopup, text = "Victoire du joueur "+str(player.id)+" !", bg=winPopupBgColor, fg="#FFFFFF", font=("Roboto Bold", 40 * -1))
         labelExample.place(x= 58, y = 33)
         ReturnMenu_image = PhotoImage(file=self.controller.relative_to_assets("ReturnMenuAfterWin.png"))
         ReturnMenuButton = Button(winPopup, cursor="hand2", image=ReturnMenu_image,borderwidth=0,highlightthickness=0,command=lambda: self.afterWin(),relief="flat")
@@ -222,16 +240,24 @@ class Game (Frame):
         self.nbMediumGobletRestant.set(str(self.gameCtrl.actual_player.nbMediumGoblets)+" restants")
         self.nbBigGobletRestant.set(str(self.gameCtrl.actual_player.nbBigGoblets)+" restants")
 
+    def updateGrid(self) -> None :
+        for line in range(len(self.gameCtrl.grid)) :
+            for column in range(len(self.gameCtrl.grid[line])) :
+                player = self.gameCtrl.grid[line][column]["player"]
+                goblet = self.gameCtrl.grid[line][column]["goblet"]
+                self.updateImageCase(self.gridCase[line][column], player, goblet)
 
-    def updateImageCase(self, button : Button) -> None :
-        if self.gameCtrl.actual_player.selectedGoblet == 1 :
+    def updateImageCase(self, button : Button, player : Player, goblet : int) -> None :
+        if goblet == 0 :
+            return None
+        elif goblet == 1 :
             gobletName = "LittleGobletCase"
-        elif self.gameCtrl.actual_player.selectedGoblet == 2 :
+        elif goblet == 2 :
             gobletName = "MediumGobletCase"
-        elif self.gameCtrl.actual_player.selectedGoblet == 3 :
+        elif goblet == 3 :
             gobletName = "BigGobletCase"
 
-        gobletImagePath = str(self.gameCtrl.actual_player.id)+"_"+gobletName+".png"
+        gobletImagePath = str(player.id)+"_"+gobletName+".png"
         ImageCase = PhotoImage(file=self.controller.relative_to_assets(gobletImagePath))
         button['image'] = ImageCase
         button.image = ImageCase
