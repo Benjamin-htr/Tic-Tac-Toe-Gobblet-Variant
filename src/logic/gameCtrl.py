@@ -43,7 +43,7 @@ class GameCtrl :
         isValid = self.isValid(line, column, goblet)
         if isValid :
             self.grid[line][column] = {"player" : self.actual_player, "goblet" : goblet}
-            print(self.grid)
+            #print(self.grid)
         
         return isValid
     
