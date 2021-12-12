@@ -21,7 +21,7 @@ class Player() :
 
     def selectGoblet(self, goblet_type : int) -> None :
         self.selectedGoblet = goblet_type
-        print(self.selectedGoblet)
+        print("Joueur "+str(self.id)+" : gobelet select : ",self.selectedGoblet)
 
     def play(self, line : int, column : int) -> bool :
         #Si l'utilisateur essaie de jouer un gobelet qu'il n'a plus, on stoppe la fonction

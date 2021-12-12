@@ -10,23 +10,63 @@ class Ia (Player) :
 
 
     def play(self) -> bool :
-        print("Je suis une ia "+self.niveau)
         if self.niveau == "simple" :
             validCases = self.getValidCases()
-            print("\n\n\n--------------------------------\nTOUR DE LIA :\n")
-            print("win possible :", self.getWinPossibles(),"\n")
-            print("align possible :", self.getAlignPossibles(validCases),"\n")
-            print("center possible :", self.getCenterPossibles(validCases),"\n")
-            print("corner possible :", self.getCornerPossibles(validCases),"\n")
-            print("cotés possible :", self.getSidePossibles(validCases),"\n")
-            print("validCases : ", validCases,"\n")
             randomPlay = validCases[random.randint(0, len(validCases)-1)]
-            self.selectedGoblet = randomPlay["gobletToPlay"]
+            self.selectGoblet(randomPlay["gobletToPlay"])
             return super().play(randomPlay["line"], randomPlay["column"])
 
         elif self.niveau == "avancee" :
-            pass
+            self.playAdvanced()
 
+    def playAdvanced(self, debug = False) -> bool :
+        validCases = self.getValidCases()
+        winPossibles = self.getWinPossibles()
+        alignPossibles = self.getAlignPossibles(validCases)
+        centerPossibles =self.getCenterPossibles(validCases)
+        cornerPossibles =self.getCornerPossibles(validCases)
+        sidePossibles =self.getSidePossibles(validCases)
+
+        if debug :
+            print("\n\n\n--------------------------------\nTOUR DE LIA :\n")
+            print("win possible :", winPossibles,"\n")
+            print("align possible :", alignPossibles,"\n")
+            print("center possible :", centerPossibles,"\n")
+            print("corner possible :", cornerPossibles,"\n")
+            print("cotés possible :", sidePossibles,"\n")
+            print("validCases : ", validCases,"\n")
+
+        typePlay = ""
+        if self.playLittlePossibilitie(winPossibles) :
+            typePlay="playWin"
+            return True
+        elif alignPossibles :
+            if self.playLittlePossibilitie(self.getCenterPossibles(alignPossibles)) :
+                typePlay="playAlignCenter"
+                return True
+            elif self.playLittlePossibilitie(self.getCornerPossibles(alignPossibles)) : 
+                typePlay="playAlignCorner"
+                return True
+            elif self.playLittlePossibilitie(self.getSidePossibles(alignPossibles)) : 
+                typePlay="playAlignSide"
+                return True
+        elif self.playLittlePossibilitie(centerPossibles) :
+            typePlay="playCenter"
+            return True
+        elif self.playLittlePossibilitie(cornerPossibles) :
+            typePlay="playCorner"
+            return True
+        elif self.playLittlePossibilitie(sidePossibles) :
+            typePlay="playSide"
+            return True
+        elif self.playLittlePossibilitie(validCases) :
+            typePlay="playValid"
+            return True
+        if debug : 
+            print(typePlay)
+            
+        return False
+            
         
 
     #Fonction IA simple (permet d'obtenir les cases vides et celles de l’adversaire qu’elle peut recouvrir d’un plus gros gobelet) :
@@ -48,88 +88,85 @@ class Ia (Player) :
 
         return validCases
 
-    #Fonction IA avancée (Joue le coup gagnant s'il y en a) :
-    def playCoupGagnant(self) -> bool :
-        """ winPossiblesPlays = self.winPossibles()
-        self.gobletsList = [self.nbLittleGoblets, self.nbMediumGoblets, self.nbBigGoblets]
-        if winPossiblesPlays != [] :
-            for winPlay in winPossiblesPlays :
-                for g in range(len(self.gobletsList)) :
-                    if self.gobletsList[g] > 0 and g+1 >= winPlay["goblet"] :
-                        self.selectedGoblet = winPlay["goblet"]
-                        super().play(winPlay["line"], winPlay["column"])
-                        return True
 
-        return False """
-        return self.playLittlePossibilitie(self.getWinPossibles())
 
-    #Fonction permettant de jouer le plus petit pion parmis une liste de coup possibles
+    #Fonction IA avancée (permet de jouer le plus petit pion parmi une liste de coup possibles)
     def playLittlePossibilitie(self, possibilities : list) -> bool :
         self.gobletsList = [self.nbLittleGoblets, self.nbMediumGoblets, self.nbBigGoblets]
+        #S'il la liste de possibs. n'est pas vide :
         if possibilities != [] :
+            #Pour chaque gobelets :
             for g in range(len(self.gobletsList)) :
-                for winPlay in possibilities :
-                    if self.gobletsList[g] > 0 and g+1 >= possibilities["goblet"] :
-                        self.selectedGoblet = possibilities["goblet"]
-                        super().play(possibilities["line"], possibilities["column"])
-                        return True
+                #On parcourt les possibilités :
+                for possibilitie in possibilities :
+                    #Si ce gobelet est disponible et est plaçable, on le sélectionne, puis on le joue
+                    if (self.gobletsList[g] > 0) and (g+1 >= possibilitie["gobletToPlay"]) :
+                        self.selectGoblet(g+1)
+                        if super().play(possibilitie["line"], possibilitie["column"]) :
+                            return True
         return False
-
-
 
 
     #Fonction IA avancée (Retourne un tableau donnant toutes les combinaisons gagnantes possibles actuellement) :
     def getWinPossibles(self) -> list :
         winPossibles = []
-        #On parcourt les lignes :
+        #On parcourt la grille de jeu de lignes en lignes :
         for i in range(len(self.gameCtrl.grid)) :
             nbOwnedCase = 0
             placeToWin = []
             for j in range(len(self.gameCtrl.grid[i])) :
+                #Si la case appartient à l'ia, on incrémente le compteur de case lui appartenant sur la ligne
                 if self.gameCtrl.grid[i][j]["player"] == self :
                     nbOwnedCase += 1
+                #Si elle ne lui appartient pas, on enregistre cette case
                 else :
                     placeToWin = {"line" : i, "column" : j, "gobletToPlay" : self.gameCtrl.grid[i][j]["goblet"]+1}
-            
+            #Si le nombre de case appartenant à l'ia est >= 2 sur la ligne, on ajoute le coup manquant pour gagner aux possibilités.
             if nbOwnedCase >= 2 :
                 winPossibles.append(placeToWin)
 
-        #On parcourt les colonnes :
+        #On parcourt la grille de jeu de colonnes en colonnes :
         for i in range(len(self.gameCtrl.grid)) :
             nbOwnedCase = 0
             placeToWin = []
             for j in range(len(self.gameCtrl.grid[i])) :
+                #Si la case appartient à l'ia, on incrémente le compteur de case lui appartenant sur la colonne
                 if self.gameCtrl.grid[j][i]["player"] == self :
                     nbOwnedCase += 1
+                #Si elle ne lui appartient pas, on enregistre cette case
                 else :
                     placeToWin = {"line" : j, "column" : i, "gobletToPlay" : self.gameCtrl.grid[j][i]["goblet"]+1}
-                    
+            #Si le nombre de case appartenant à l'ia est >= 2 sur la colonne, on ajoute le coup manquant pour gagner aux possibilités.
             if nbOwnedCase >= 2 :
                 winPossibles.append(placeToWin)
 
-        #On parcourt les diagonales
         nbOwnedCase = 0
+        #On parcourt la grille de jeu sur la diagonale descendante : 
         for i in range(len(self.gameCtrl.grid)):
+            #Si la case appartient à l'ia, on incrémente le compteur de case lui appartenant sur la diagonale
             if self.gameCtrl.grid[i][i]["player"] == self:
                 nbOwnedCase += 1
+            #Si elle ne lui appartient pas, on enregistre cette case
             else :
                 placeToWin = {"line" : i, "column" : i, "gobletToPlay" : self.gameCtrl.grid[i][i]["goblet"]+1}
+        #Si le nombre de case appartenant à l'ia est >= 2 sur la diagonale,  on ajoute le coup manquant pour gagner aux possibilités.
         if nbOwnedCase >= 2 :
                 winPossibles.append(placeToWin)
 
         nbOwnedCase = 0
+        #On parcourt la grille de jeu sur la diagonale montante :
         for i in range(len(self.gameCtrl.grid)):
+            #Si la case appartient à l'ia, on incrémente le compteur de case lui appartenant sur la diagonale 
             if self.gameCtrl.grid[i][len(self.gameCtrl.grid) - 1 - i]["player"] == self:
                 nbOwnedCase += 1
+            #Si elle ne lui appartient pas, on enregistre cette case
             else :
                 placeToWin = {"line" : i, "column" : len(self.gameCtrl.grid) - 1 - i, "gobletToPlay" : self.gameCtrl.grid[i][len(self.gameCtrl.grid) - 1 - i]["goblet"]+1}
+        #Si le nombre de case appartenant à l'ia est >= 2 sur la diagonale,  on ajoute le coup manquant pour gagner aux possibilités.
         if nbOwnedCase >= 2 :
                 winPossibles.append(placeToWin)
 
         return winPossibles
-
-    def playAlign(self) -> bool :
-        pass
 
     #Fonction IA avancée (Donne les combinaison permettant d'aligner les pions) :
     def getAlignPossibles(self, possiblePlays : list) -> list :

@@ -107,7 +107,9 @@ class GameCtrl :
             
 
 
-
+    def printGrid(self) -> None :
+        for line in self.grid :
+            print(line,"\n")
 
 
         
