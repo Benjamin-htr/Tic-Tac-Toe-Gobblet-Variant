@@ -7,6 +7,8 @@ class GameCtrl :
     def __init__(self) -> None :
         self.configCtrl = ConfigCtrl()
 
+        #ATTRIBUTS :
+        
         #Type de jeu (1 ou 2 joueurs) :
         self.game_type = self.configCtrl.getGame_type()
         #Mode de l'IA (simple ou avancee) :
@@ -18,24 +20,28 @@ class GameCtrl :
         self.grid = [[{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0}],
                     [{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0}],
                     [{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0},{"player" : None, "goblet" : 0}]]
-
+        #Représente le joueur 1 :
         self.player_1 = None
+        #Représente le joueur 2 (joueur humain ou ia) :
         self.player_2 = None
 
-
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction lançant une nouvelle partie de jeu :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def newGame(self) :
         print("New Game !")
+        #Si le mode de jeu est 1 joueur, on ajoute un joueur et une ia à la partie:
         if self.game_type == "1 joueur" :
             self.player_1 = Player(self, 1)
             self.player_2 = Ia(self, 2, self.ia_level)
 
+        #Sinon, si le mode de jeu est 2 joueurs, on ajoute 2 joueurs à la partie:
         elif self.game_type == "2 joueurs" :
             self.player_1 = Player(self, 1)
             self.player_2 = Player(self, 2)
 
-        print(self.player_1)
+        #Le joueur 1 joue le premier :
         self.actual_player = self.player_1
-        print(self.actual_player)
             
         return None
 
@@ -43,7 +49,6 @@ class GameCtrl :
         isValid = self.isValid(line, column, goblet)
         if isValid :
             self.grid[line][column] = {"player" : self.actual_player, "goblet" : goblet}
-            #print(self.grid)
         
         return isValid
     

@@ -5,15 +5,25 @@ class Ia (Player) :
     def __init__(self, gameCtrl, name : str, niveau : str) -> None :
         Player.__init__(self, gameCtrl, name)
         
+        #ATTRIBUTS :
+
+        #Représente le niveau de l'IA (simple ou avancée) :
         self.niveau = niveau
+        #Représente les gobelets de l'IA :
         self.gobletsList = [self.nbLittleGoblets, self.nbMediumGoblets, self.nbBigGoblets]
 
-
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction de jeu de l'IA :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def play(self) -> bool :
         if self.niveau == "simple" :
+            #L'IA récupère toutes les possibilités de jeux pour elle :
             validCases = self.getValidCases()
+            #Elle en choisit une au hasard
             randomPlay = validCases[random.randint(0, len(validCases)-1)]
+            #Sélectionne le plus petit gobelet nécessaire :
             self.selectGoblet(randomPlay["gobletToPlay"])
+            #Puis le joue :
             return super().play(randomPlay["line"], randomPlay["column"])
 
         elif self.niveau == "avancee" :
@@ -61,30 +71,35 @@ class Ia (Player) :
             print("validCases : ", validCases,"\n")
 
         typePlay = ""
+        #L'IA joue le coup gagnant si c'est possible (en plaçant le plus petit pion nécessaire)
         if self.playLittlePossibilitie(winPossibles) :
             typePlay="playWin"
             return True
+        #Sinon, si elle peut aligner des pions : :
         elif alignPossibles :
+            #L'ia aligne ses pions en priorisant le centre si possible (en plaçant le plus petit pion nécessaire):
             if self.playLittlePossibilitie(self.getCenterPossibles(alignPossibles)) :
                 typePlay="playAlignCenter"
                 return True
+            #Sinon, L'ia aligne ses pions en priorisant les coins si possible (en plaçant le plus petit pion nécessaire):
             elif self.playLittlePossibilitie(self.getCornerPossibles(alignPossibles)) : 
                 typePlay="playAlignCorner"
                 return True
+            #Sinon, L'ia aligne ses pions en priorisant les cotés si possible (en plaçant le plus petit pion nécessaire):
             elif self.playLittlePossibilitie(self.getSidePossibles(alignPossibles)) : 
                 typePlay="playAlignSide"
                 return True
+        #Sinon, L'ia joue au centre si possible (en plaçant le plus petit pion nécessaire):
         elif self.playLittlePossibilitie(centerPossibles) :
             typePlay="playCenter"
             return True
+        #Sinon, L'ia joue dans les coins si possible (en plaçant le plus petit pion nécessaire):
         elif self.playLittlePossibilitie(cornerPossibles) :
             typePlay="playCorner"
             return True
+        #Sinon, L'ia joue sur les cotés si possible (en plaçant le plus petit pion nécessaire):
         elif self.playLittlePossibilitie(sidePossibles) :
             typePlay="playSide"
-            return True
-        elif self.playLittlePossibilitie(validCases) :
-            typePlay="playValid"
             return True
         if debug : 
             print(typePlay)
