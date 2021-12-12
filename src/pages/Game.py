@@ -246,7 +246,7 @@ class Game (Frame):
         winPopup.grab_set()
 
         textLabel = "Victoire"
-        if str(type(self.gameCtrl.player_2)) == "<class 'src.logic.Ia.Ia'>":
+        if str(type(player)) == "<class 'src.logic.Ia.Ia'>":
             textLabel = textLabel + " de l'ordinateur !"
         else :
             textLabel = textLabel + " du joueur " + str(player.id) + " !"
