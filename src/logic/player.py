@@ -66,6 +66,12 @@ class Player() :
             result = self.nbBigGoblets
 
         return result
+
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction permettant de savoir si le joueur a encore des gobelets disponibles :
+    #----------------------------------------------------------------------------------------------------------------------------------
+    def isEmpty(self) -> bool :
+        return self.nbLittleGoblets == 0 and self.nbMediumGoblets == 0 and self.nbBigGoblets == 0
     
 
     

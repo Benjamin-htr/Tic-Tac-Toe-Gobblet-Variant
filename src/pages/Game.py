@@ -1,4 +1,4 @@
-#Permet l'import de Player et de Gui pour le type hinting sans créer de problème d'import cyclique :
+#Permet l'import de Player, Ia et Gui pour le type hinting sans créer de problème d'import cyclique :
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -160,7 +160,7 @@ class Game (Frame):
         L0C2.image=EmptyCase_image
         L0C2.place(x=col3Pos,y=line1Pos,width=105.0,height=105.0)
 
-        L1C2 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(1,),relief="flat")
+        L1C2 = Button(self,  image=EmptyCase_image,cursor="hand2", borderwidth=0,highlightthickness=0,command=lambda: self.pressCase(1,2),relief="flat")
         L1C2.image=EmptyCase_image
         L1C2.place(x=col3Pos,y=line2Pos,width=105.0,height=105.0)
 
@@ -184,13 +184,14 @@ class Game (Frame):
             self.updateGrid()
             self.updateNbGoblet()
 
-            #S'il n'y a pas de gagnants :
-            if not(self.checkWin()) :
+            #S'il n'y a pas de gagnants et s'il y a pas égalité :
+            if not(self.checkWin()) and not(self.checkEquality()):
                 #On passe le tour :
                 self.gameCtrl.nextTurn()
                 #On remet à jour la grille et on revérifie s'il y a un gagnant (utilise puisque l'IA à jouer dans la foulée)
                 self.updateGrid()
                 self.checkWin()
+                self.checkEquality()
                 #On met à jour les autres elements d'interfaces :
                 self.updateSelectGoblet()
                 self.updateNbGoblet()
@@ -207,6 +208,16 @@ class Game (Frame):
             return True
         elif self.gameCtrl.isWin(self.gameCtrl.player_2) :
             self.winPopup(self.gameCtrl.player_2)
+            return True
+        else :
+            return False
+
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction permettant de déclencher l'ouverture de la fenêtre d'égalité s'il y a égalité :
+    #----------------------------------------------------------------------------------------------------------------------------------
+    def checkEquality(self) -> bool :
+        if self.gameCtrl.isEquality() :
+            self.equalityPopup()
             return True
         else :
             return False
@@ -233,8 +244,15 @@ class Game (Frame):
         winPopup.protocol("WM_DELETE_WINDOW", lambda:None)
         winPopup.overrideredirect(True)
         winPopup.grab_set()
-        
-        labelExample = Label(winPopup, text = "Victoire du joueur "+str(player.id)+" !", bg=winPopupBgColor, fg="#FFFFFF", font=("Roboto Bold", 40 * -1))
+
+        textLabel = "Victoire"
+        print(str(type(self.gameCtrl.player_2)))
+        if str(type(self.gameCtrl.player_2)) == "<class 'src.logic.Ia.Ia'>":
+            textLabel = textLabel + " de l'ordinateur !"
+        else :
+            textLabel = textLabel + " du joueur " + str(player.id) + " !"
+
+        labelExample = Label(winPopup, text = textLabel, bg=winPopupBgColor, fg="#FFFFFF", font=("Roboto Bold", 40 * -1))
         labelExample.place(x= 58, y = 33)
         ReturnMenu_image = PhotoImage(file=self.controller.relative_to_assets("ReturnMenuAfterWin.png"))
         ReturnMenuButton = Button(winPopup, cursor="hand2", image=ReturnMenu_image,borderwidth=0,highlightthickness=0,command=lambda: self.afterWin(),relief="flat")
@@ -242,7 +260,37 @@ class Game (Frame):
         ReturnMenuButton.place(x=100.0,y=111.0,width=299.0,height=54.0)
 
     #----------------------------------------------------------------------------------------------------------------------------------
-    #Fonction permettant de revenir au menu et de supprimer le contenu de la partie après une victoire :
+    #Fonction dessinant la fenêtre d'égalité :
+    #----------------------------------------------------------------------------------------------------------------------------------
+    def equalityPopup(self) -> bool :
+        equalityPopup = Toplevel(self)
+        equalityPopup.title("Egalité !")
+        equalityPopupBgColor = "#4C5985"
+        equalityPopup.configure(background=equalityPopupBgColor)
+        #Taille de la fenêtre
+        equalityPopupWidth = 500
+        equalityPopupHeight = 192
+        equalityPopup.geometry(f"{equalityPopupWidth}x{equalityPopupHeight}")
+        #Positition de la fenêtre pour la centrer
+        x_Left = int(equalityPopup.winfo_screenwidth()/2 - equalityPopupWidth/2)
+        y_Top = int(equalityPopup.winfo_screenheight()/2 - equalityPopupHeight/2)
+        
+        #Centrage de la fenêtre
+        equalityPopup.geometry("+{}+{}".format(x_Left, y_Top))
+        #Empêche de fermer la fenêtre :
+        equalityPopup.protocol("WM_DELETE_WINDOW", lambda:None)
+        equalityPopup.overrideredirect(True)
+        equalityPopup.grab_set()
+        
+        labelExample = Label(equalityPopup, text = "Egalité ... Les deux joueurs\n n'ont plus de gobelets ", bg=equalityPopupBgColor, fg="#FFFFFF", font=("Roboto Bold", 35 * -1))
+        labelExample.place(x= 47, y = 12)
+        ReturnMenu_image = PhotoImage(file=self.controller.relative_to_assets("ReturnMenuAfterWin.png"))
+        ReturnMenuButton = Button(equalityPopup, cursor="hand2", image=ReturnMenu_image,borderwidth=0,highlightthickness=0,command=lambda: self.afterWin(),relief="flat")
+        ReturnMenuButton.image=ReturnMenu_image
+        ReturnMenuButton.place(x=100.0,y=111.0,width=299.0,height=54.0)
+
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction permettant de revenir au menu et de supprimer le contenu de la partie après une victoire (ou une égalité) :
     #----------------------------------------------------------------------------------------------------------------------------------
     def afterWin(self) -> None :
         self.controller.show_frame("Menu")
