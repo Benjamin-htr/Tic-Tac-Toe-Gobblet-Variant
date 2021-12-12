@@ -18,7 +18,31 @@ class Ia (Player) :
 
         elif self.niveau == "avancee" :
             self.playAdvanced()
+        
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction IA simple (permet d'obtenir les cases vides et celles de l’adversaire qu’elle peut recouvrir d’un plus gros gobelet) :
+    #----------------------------------------------------------------------------------------------------------------------------------
+    def getValidCases(self) -> list :
+        self.gobletsList = [self.nbLittleGoblets, self.nbMediumGoblets, self.nbBigGoblets]
+        validCases = []
+        #On parcourt la grille :
+        for line in range(len(self.gameCtrl.grid)) :
+            for column in range(len(self.gameCtrl.grid[line])) :
+                #Pour chaque gobelets :
+                for g in range (len(self.gobletsList)) :
+                    #S'il lui en reste
+                    if self.gobletsList[g] > 0 :
+                        #On regarde si elle peut recouvrir la case (ou le gobelet de l'adv)
+                        if self.gameCtrl.isValid(line, column, g+1) :
+                            #puis on l'ajoute + sort de la boucle pour rester sur le gobelet minimum nécessaire
+                            validCases.append({"line":line, "column":column, "gobletToPlay":g+1})
+                            break
 
+        return validCases
+
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction IA Avancée de jeu (Définit l'ordre de priorité des critère de choix de jeu de l'IA avancée) :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def playAdvanced(self, debug = False) -> bool :
         validCases = self.getValidCases()
         winPossibles = self.getWinPossibles()
@@ -67,30 +91,10 @@ class Ia (Player) :
             
         return False
             
-        
 
-    #Fonction IA simple (permet d'obtenir les cases vides et celles de l’adversaire qu’elle peut recouvrir d’un plus gros gobelet) :
-    def getValidCases(self) -> list :
-        self.gobletsList = [self.nbLittleGoblets, self.nbMediumGoblets, self.nbBigGoblets]
-        validCases = []
-        #On parcourt la grille :
-        for line in range(len(self.gameCtrl.grid)) :
-            for column in range(len(self.gameCtrl.grid[line])) :
-                #Pour chaque gobelets :
-                for g in range (len(self.gobletsList)) :
-                    #S'il lui en reste
-                    if self.gobletsList[g] > 0 :
-                        #On regarde si elle peut recouvrir la case (ou le gobelet de l'adv)
-                        if self.gameCtrl.isValid(line, column, g+1) :
-                            #puis on l'ajoute + sort de la boucle pour rester sur le gobelet minimum nécessaire
-                            validCases.append({"line":line, "column":column, "gobletToPlay":g+1})
-                            break
-
-        return validCases
-
-
-
+    #----------------------------------------------------------------------------------------------------------------------------------
     #Fonction IA avancée (permet de jouer le plus petit pion parmi une liste de coup possibles)
+    #----------------------------------------------------------------------------------------------------------------------------------
     def playLittlePossibilitie(self, possibilities : list) -> bool :
         self.gobletsList = [self.nbLittleGoblets, self.nbMediumGoblets, self.nbBigGoblets]
         #S'il la liste de possibs. n'est pas vide :
@@ -106,8 +110,9 @@ class Ia (Player) :
                             return True
         return False
 
-
+    #----------------------------------------------------------------------------------------------------------------------------------
     #Fonction IA avancée (Retourne un tableau donnant toutes les combinaisons gagnantes possibles actuellement) :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def getWinPossibles(self) -> list :
         winPossibles = []
         #On parcourt la grille de jeu de lignes en lignes :
@@ -168,7 +173,9 @@ class Ia (Player) :
 
         return winPossibles
 
-    #Fonction IA avancée (Donne les combinaison permettant d'aligner les pions) :
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction IA avancée (Donne les combinaisons permettant d'aligner les pions) :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def getAlignPossibles(self, possiblePlays : list) -> list :
         alignPossible = []
         #Pour chaque case de la grille :
@@ -188,11 +195,16 @@ class Ia (Player) :
 
         return alignPossible
     
-    #Permet de savoir si deux cellules sont voisines :
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction IA avancée (Permet de savoir si deux cellules sont voisines) :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def isAttenante(self, lineA : int, columnA : int, lineB : int, columnB : int) -> bool :
         return (abs(lineA-lineB) <= 1) and (abs(columnA-columnB) <= 1)
 
-    #Permet de savoir si deux deux cellules sont alignés (d'après la logique du jeu) :
+
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction IA avancée (Permet de savoir si deux deux cellules sont alignés (d'après la logique du jeu)) :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def isAlign(self, lineA, columnA, lineB, columnB) -> bool :
         if self.isAttenante(lineA, columnA, lineB, columnB) :
             #Si les deux cases ne sont pas sur les cotés :
@@ -201,8 +213,9 @@ class Ia (Player) :
                 return True
 
         return False
-    
+    #----------------------------------------------------------------------------------------------------------------------------------
     #Fonction IA avancée (Donne les combinaison permettant de jouer dans le centre parmis une liste de possibilités) :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def getCenterPossibles(self, possiblePlays : list) -> list :
         centerPossible = []
         for possibilitie in possiblePlays :
@@ -212,7 +225,9 @@ class Ia (Player) :
         
         return centerPossible
 
+    #----------------------------------------------------------------------------------------------------------------------------------
     #Fonction IA avancée (Donne les combinaison permettant de jouer dans les coins parmis une liste de possibilités) :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def getCornerPossibles(self, possiblePlays : list) -> list :
         cornerPossibles = []
         for possibilitie in possiblePlays :
@@ -222,7 +237,9 @@ class Ia (Player) :
         
         return cornerPossibles
 
+    #---------------------------------------------------------------------------------------------------------------
     #Fonction IA avancée (Donne les combinaison permettant de jouer sur les cotés parmis une liste de possibilités) :
+    #---------------------------------------------------------------------------------------------------------------
     def getSidePossibles(self, possiblePlays : list) -> list :
         sidePossibles = []
         for possibilitie in possiblePlays :
