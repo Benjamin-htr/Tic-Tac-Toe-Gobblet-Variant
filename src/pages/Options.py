@@ -1,24 +1,45 @@
+#Permet l'import de Gui pour le type hinting sans créer de problème d'import cyclique :
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from src.pages.Gui import Gui
+
 from tkinter import Button, Frame, PhotoImage, Label, Radiobutton, StringVar
 from src.logic.ConfigCtrl import ConfigCtrl
 
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#Classe représentant l'interface des options :
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
 class Options (Frame):
-    def __init__(self, parent, controller, bg) -> None :
+    def __init__(self, parent : Frame, controller : Gui, bg : str) -> None :
+        #J'initialise le parent :
         Frame.__init__(self, parent, bg=bg)
         
-        #attributes :
-        self.bg = bg
-        self.controller = controller
-        self.gameType = StringVar()
-        self.iaLevel = StringVar()
-        
+        #ATTRIBUTS :
 
+        #Couleur de fond :
+        self.bg = bg
+        #Représente le controller (Gui) :
+        self.controller = controller
+        #Représente le type de jeu sélectionné par le joueur sur l'interface (-> pour l'interface)
+        self.gameType = StringVar()
+        #Représente le type de l'ia sélectionné par le joueur sur l'interface (-> pour l'interface
+        self.iaLevel = StringVar()
+        #Controller logique des options:
         self.configCtrl = ConfigCtrl()
         
-        #init :
+        #INIT :
+
+        #On dessine l'interface :
         self.draw()
+        #On initialise les choix :
         self.initCoices()
 
-    #fonction mettant à jour l'interface par rapport au fichier de config
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction mettant à jour l'interface par rapport au fichier de config :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def initCoices(self) :
         game_type_stored = self.configCtrl.getGame_type()
         ia_level_stored = self.configCtrl.getIa_level()
@@ -26,16 +47,15 @@ class Options (Frame):
         self.gameType.set(game_type_stored)
         self.iaLevel.set(ia_level_stored)
 
-    #fonction mettant à jour le fichier de config
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction mettant à jour le fichier de config :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def updateConfig(self) :
         self.configCtrl.updateConfig(self.gameType.get(), self.iaLevel.get())
 
-    def showGameType(self) :
-        print("Nb de joueur modifié : ", self.gameType.get())
-
-    def showIaLevel(self) :
-        print("Niveau de lIA modifié : ", self.iaLevel.get())
-
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction dessinant l'interface des options :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def draw(self) -> None :
         #Titre de la page :
         title = Label(self, anchor="nw", justify="center",text="Options",bg=self.bg, fg="white", font=("Roboto Bold", 50 * -1))
@@ -63,3 +83,14 @@ class Options (Frame):
         ReturnMenuButton.image=ReturnMenu_image
         ReturnMenuButton.place(x=388.0,y=553.0,width=423.0,height=92.0)
         
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction DEBUG :
+    #----------------------------------------------------------------------------------------------------------------------------------
+    def showGameType(self) :
+        print("Nb de joueur modifié : ", self.gameType.get())
+
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction DEBUG
+    #----------------------------------------------------------------------------------------------------------------------------------
+    def showIaLevel(self) :
+        print("Niveau de lIA modifié : ", self.iaLevel.get())

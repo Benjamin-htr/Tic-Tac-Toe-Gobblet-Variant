@@ -1,5 +1,5 @@
-from src.pages.Gui import gui
+from src.pages.Gui import Gui
 
-Interface = gui()
+Interface = Gui()
 Interface.mainloop()
 

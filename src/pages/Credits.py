@@ -1,18 +1,37 @@
+#Permet l'import de Gui pour le type hinting sans créer de problème d'import cyclique :
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from src.pages.Gui import Gui
+
 from tkinter import Button, Frame, PhotoImage, Label
 
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#Classe représentant l'interface des crédits :
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
 class Credits (Frame):
-    def __init__(self, parent, controller, bg) -> None :
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Constructeur :
+    #----------------------------------------------------------------------------------------------------------------------------------
+    def __init__(self, parent : Frame, controller : Gui, bg : str) -> None :
+        #J'initialise le parent :
         Frame.__init__(self, parent, bg=bg)
         
-        #attributes :
+        #ATTRIBUTS :
+
+        #Représente la couleur du fond
         self.bg = bg
+        #Représente le controller (Gui) :
         self.controller = controller
         
-        #init :
+        #INIT :
         self.draw()
 
-
-
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction dessinant l'interface :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def draw(self) -> None :
         title = Label(self, anchor="nw", justify="center",text="Crédits",bg=self.bg, fg="white", font=("Roboto Bold", 50 * -1))
         title.place(x=519, y=48)

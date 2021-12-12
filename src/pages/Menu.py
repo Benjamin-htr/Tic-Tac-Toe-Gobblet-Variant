@@ -1,18 +1,36 @@
+#Permet l'import de Gui pour le type hinting sans créer de problème d'import cyclique :
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from src.pages.Gui import Gui
+
 from tkinter import Button, Frame, PhotoImage
 from tkinter.messagebox import askyesno
 
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
+#Classe représentant l'interface du menu :
+#----------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------
 class Menu (Frame):
-    def __init__(self, parent, controller, bg) -> None :
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Constructeur :
+    #----------------------------------------------------------------------------------------------------------------------------------
+    def __init__(self, parent : Frame, controller : Gui, bg : str) -> None :
+        #J'initialise le parent :
         Frame.__init__(self, parent, bg=bg)
-        
 
-        #attributes :
+        #ATTRIBUTS :
+
+        #Représente le controller (Gui) :
         self.controller = controller
         
-        
-        #init :
+        #INIT :
         self.draw()
 
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction dessinant l'interface du menu :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def draw(self) -> None :
         NewGameButton_image = PhotoImage(file=self.controller.relative_to_assets("NewGame.png"))
         NewGameButton = Button(self,cursor="hand2", image=NewGameButton_image,borderwidth=0,highlightthickness=0,command=lambda: self.controller.show_frame("Game"),relief="flat")
@@ -35,7 +53,9 @@ class Menu (Frame):
         QuitButton.place(x=389.0,y=513.0,width=423.0,height=92.0)
             
     
-
+    #----------------------------------------------------------------------------------------------------------------------------------
+    #Fonction permettant de demander la fin de l'execution du script :
+    #----------------------------------------------------------------------------------------------------------------------------------
     def quit(self) -> None :
         answer = askyesno(title='Quitter', message='Etes vous sûr de vouloir quitter ?')
 
